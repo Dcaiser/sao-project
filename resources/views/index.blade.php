@@ -134,17 +134,19 @@
         </div>
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            @foreach ($products as $produk )
+
             <a href="#" class="block p-4 bg-white rounded-lg shadow-xs shadow-indigo-100">
-                <img alt="" src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&amp;fit=crop&amp;q=80&amp;w=1160" class="object-cover w-full h-56 rounded-md">
+                <img alt="" src="{{ asset('storage/' . $produk->image) }}" class="object-cover w-full h-56 rounded-md">
                 <div class="mt-2">
                     <dl>
                         <div>
                             <dt class="sr-only">category</dt>
-                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">Olahraga</dd>
+                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">{{ $produk->category->name }}</dd>
                         </div>
                         <div>
                             <dt class="sr-only">name</dt>
-                            <dd class="font-medium">Bola Futsal Standar</dd>
+                            <dd class="font-medium">{{ $produk->name }}</dd>
                         </div>
                     </dl>
                     <div class="flex items-center justify-between xt-xs justify">
@@ -154,7 +156,7 @@
                             </svg>
                             <div class="mt-1.5 sm:mt-0">
                             <p class="text-gray-500">stock</p>
-                            <p class="font-medium">40</p>
+                            <p class="font-medium">{{ $produk->stock }}</p>
                             </div>
                         </div>
                         <div class="">
@@ -166,103 +168,7 @@
 
                 </div>
             </a>
-            <a href="#" class="block p-4 bg-white rounded-lg shadow-xs shadow-indigo-100">
-                <img alt="" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&amp;fit=crop&amp;q=80&amp;w=1160" class="object-cover w-full h-56 rounded-md">
-                <div class="mt-2">
-                    <dl>
-                        <div>
-                            <dt class="sr-only">category</dt>
-                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">Musik</dd>
-                        </div>
-                        <div>
-                            <dt class="sr-only">name</dt>
-                            <dd class="font-medium">Gitar Akustik</dd>
-                        </div>
-                    </dl>
-                    <div class="flex items-center justify-between xt-xs justify">
-                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                            <svg class="text-indigo-700 size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-                            </svg>
-                            <div class="mt-1.5 sm:mt-0">
-                            <p class="text-gray-500">stock</p>
-                            <p class="font-medium">40</p>
-                            </div>
-                        </div>
-                        <div class="">
-                            <p class="inline-block px-4 py-2 text-xs font-semibold text-[#0F2854]   ">
-                                view details
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </a>
-            <a href="#" class="block p-4 bg-white rounded-lg shadow-xs shadow-indigo-100">
-                <img alt="" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;q=80&amp;w=1160" class="object-cover w-full h-56 rounded-md">
-                <div class="mt-2">
-                    <dl>
-                        <div>
-                            <dt class="sr-only">category</dt>
-                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">Pramuka</dd>
-                        </div>
-                        <div>
-                            <dt class="sr-only">name</dt>
-                            <dd class="font-medium">Tenda Pramuka 4P</dd>
-                        </div>
-                    </dl>
-                    <div class="flex items-center justify-between xt-xs justify">
-                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                            <svg class="text-indigo-700 size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-                            </svg>
-                            <div class="mt-1.5 sm:mt-0">
-                            <p class="text-gray-500">stock</p>
-                            <p class="font-medium">40</p>
-                            </div>
-                        </div>
-                        <div class="">
-                            <p class="inline-block px-4 py-2 text-xs font-semibold text-[#0F2854]   ">
-                                view details
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </a>
-            <a href="#" class="block p-4 bg-white rounded-lg shadow-xs shadow-indigo-100">
-                <img alt="" src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&amp;fit=crop&amp;q=80&amp;w=1160" class="object-cover w-full h-56 rounded-md">
-                <div class="mt-2">
-                    <dl>
-                        <div>
-                            <dt class="sr-only">category</dt>
-                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">Musik</dd>
-                        </div>
-                        <div>
-                            <dt class="sr-only">name</dt>
-                            <dd class="font-medium">Keyboard 61 Key</dd>
-                        </div>
-                    </dl>
-                    <div class="flex items-center justify-between xt-xs justify">
-                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                            <svg class="text-indigo-700 size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-                            </svg>
-                            <div class="mt-1.5 sm:mt-0">
-                            <p class="text-gray-500">stock</p>
-                            <p class="font-medium">40</p>
-                            </div>
-                        </div>
-                        <div class="">
-                            <p class="inline-block px-4 py-2 text-xs font-semibold text-[#0F2854]   ">
-                                view details
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </a>
-
+            @endforeach
         </div>
     </div>
 

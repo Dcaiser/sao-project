@@ -11,76 +11,59 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('children')
-            ->whereNull('parent_id')
-            ->orderBy('name')
-            ->get();
+        $products = Product::with('category')->latest()->get();
+        $categories = Category::orderBy('name')->get();
 
-        $products = Product::with('category.parent')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('admin.product', compact('categories', 'products'));
+        return view('admin.product', compact('products', 'categories'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|max:2048',
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'image' => ['nullable', 'image', 'max:2048'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'notes' => ['nullable', 'string'],
         ]);
 
-        $product = new Product();
-        $product->name = $validated['name'];
-        $product->category_id = $validated['category_id'];
-        $product->stock = $validated['stock'];
-
         if ($request->hasFile('image')) {
-            $product->image = $request->file('image')->store('products', 'public');
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $product->save();
+        Product::create($data);
 
-        return redirect()->route('admin.products.index')->with('status', 'Product created');
+        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil ditambahkan.');
     }
 
     public function edit(Product $product)
     {
-        $categories = Category::with('children')
-            ->whereNull('parent_id')
-            ->orderBy('name')
-            ->get();
-
-        $product->load('category.parent');
+        $product->load('category');
+        $categories = Category::orderBy('name')->get();
 
         return view('admin.product-edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|max:2048',
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'image' => ['nullable', 'image', 'max:2048'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'notes' => ['nullable', 'string'],
         ]);
-
-        $product->name = $validated['name'];
-        $product->category_id = $validated['category_id'];
-        $product->stock = $validated['stock'];
 
         if ($request->hasFile('image')) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $product->image = $request->file('image')->store('products', 'public');
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $product->save();
+        $product->update($data);
 
-        return redirect()->route('admin.products.index')->with('status', 'Product updated');
+        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil diperbarui.');
     }
 
     public function destroy(Product $product)
@@ -91,6 +74,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('admin.products.index')->with('status', 'Product deleted');
+        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil dihapus.');
     }
 }

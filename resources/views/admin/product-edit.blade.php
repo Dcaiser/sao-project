@@ -27,27 +27,29 @@
                     @if ($product->image)
                         <p class="mt-2 text-xs text-slate-500">Gambar saat ini: {{ $product->image }}</p>
                     @endif
-+                    @error('image')
-+                        <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
-+                    @enderror
+                    @error('image')
+                        <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium text-slate-700">Kategori Utama</label>
-                    <select id="category-parent" class="mt-2 w-full rounded-xl border-slate-200" data-selected="{{ $product->category?->parent_id ?? $product->category_id }}">
+                    <label class="text-sm font-medium text-slate-700">Kategori</label>
+                    <select name="category_id" class="mt-2 w-full rounded-xl border-slate-200" required>
                         <option value="">Pilih kategori</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>{{ $category->name }}</option>
                         @endforeach
                     </select>
+                    @error('category_id')
+                        <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium text-slate-700">Subkategori</label>
-                    <select id="category-child" name="category_id" class="mt-2 w-full rounded-xl border-slate-200" data-selected="{{ $product->category_id }}">
-                        <option value="">Pilih subkategori</option>
-                    </select>
-                    @error('category_id')
+                <div>
+                    <label for="notes" class="text-sm font-medium text-slate-700">Catatan (opsional)</label>
+                    <textarea id="notes" name="notes" rows="3" class="mt-2 w-full rounded-xl border-slate-200">{{ old('notes', $product->notes) }}</textarea>
+                    @error('notes')
                         <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                     @enderror
                 </div>
@@ -67,58 +69,4 @@
             </form>
         </div>
     </div>
-
-    <script>
-        const categories = @json($categories);
-        const parentSelect = document.getElementById('category-parent');
-        const childSelect = document.getElementById('category-child');
-        const selectedParent = parentSelect.dataset.selected;
-        const selectedChild = childSelect.dataset.selected;
-
-        const renderChildren = (parentId) => {
-            childSelect.innerHTML = '';
-            if (!parentId) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'Pilih subkategori';
-                childSelect.appendChild(option);
-                childSelect.disabled = true;
-                return;
-            }
-
-            const parent = categories.find((item) => String(item.id) === String(parentId));
-            if (!parent || parent.children.length === 0) {
-                const option = document.createElement('option');
-                option.value = parentId;
-                option.textContent = 'Gunakan kategori ini';
-                childSelect.appendChild(option);
-                childSelect.disabled = false;
-                return;
-            }
-
-            const placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.textContent = 'Pilih subkategori';
-            childSelect.appendChild(placeholder);
-
-            parent.children.forEach((child) => {
-                const option = document.createElement('option');
-                option.value = child.id;
-                option.textContent = child.name;
-                if (selectedChild && String(child.id) === String(selectedChild)) {
-                    option.selected = true;
-                }
-                childSelect.appendChild(option);
-            });
-
-            childSelect.disabled = false;
-        };
-
-        parentSelect.addEventListener('change', () => renderChildren(parentSelect.value));
-
-        if (selectedParent) {
-            parentSelect.value = selectedParent;
-        }
-        renderChildren(parentSelect.value);
-    </script>
 @endsection
