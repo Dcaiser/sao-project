@@ -85,7 +85,13 @@
 							<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 								@foreach ($products as $product)
 									<div class="p-4 border shadow-sm product-card rounded-2xl border-slate-200 bg-white/80" data-id="{{ $product->id }}" data-name="{{ $product->name }}">
-									<div class="h-32 rounded-xl bg-slate-100"></div>
+								@if ($product->image)
+									<img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="object-cover w-full h-32 rounded-xl">
+								@else
+									<div class="flex items-center justify-center w-full h-32 rounded-xl bg-slate-200">
+										<span class="text-xs text-slate-500">Tidak ada gambar</span>
+									</div>
+								@endif
 									<div class="mt-4">
 										<p class="text-sm text-slate-500">{{ $product->category?->name ?? '-' }}</p>
 										<h3 class="text-base font-semibold text-slate-900">{{ $product->name }}</h3>
@@ -173,10 +179,10 @@
 							<p class="text-xs text-slate-500">${item.qty}x</p>
 						</div>
 						<div class="flex items-center gap-2">
-							<button type="button" class="cart-minus h-8 w-8 rounded-lg border border-slate-200 text-sm" data-id="${item.productId}">-</button>
-							<span class="min-w-6 text-center text-sm font-semibold text-slate-900">${item.qty}</span>
-							<button type="button" class="cart-plus h-8 w-8 rounded-lg border border-slate-200 text-sm" data-id="${item.productId}">+</button>
-							<button type="button" class="cart-remove h-8 rounded-lg border border-rose-200 px-2 text-xs text-rose-600" data-id="${item.productId}">Hapus</button>
+							<button type="button" class="w-8 h-8 text-sm border rounded-lg cart-minus border-slate-200" data-id="${item.productId}">-</button>
+							<span class="text-sm font-semibold text-center min-w-6 text-slate-900">${item.qty}</span>
+							<button type="button" class="w-8 h-8 text-sm border rounded-lg cart-plus border-slate-200" data-id="${item.productId}">+</button>
+							<button type="button" class="h-8 px-2 text-xs border rounded-lg cart-remove border-rose-200 text-rose-600" data-id="${item.productId}">Hapus</button>
 						</div>
 					</div>`
 				);

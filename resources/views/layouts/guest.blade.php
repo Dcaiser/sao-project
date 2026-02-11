@@ -14,7 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-white bg-slate-950">
+    <body class="z-0 font-sans antialiased text-white bg-center bg-no-repeat bg-cover" style="background-image: url('{{ asset('storage/products/tenda.jpg') }}'); ">
         <div class="flex flex-col min-h-screen lg:flex-row">
             <div class="relative w-full lg:w-[70%] overflow-hidden">
 

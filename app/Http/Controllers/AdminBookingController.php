@@ -38,7 +38,7 @@ class AdminBookingController extends Controller
                         'product_id' => $item->product_id,
                         'rental_start_date' => $booking->date_start,
                         'rental_end_date' => $booking->date_end,
-                        'rental_status' => 'waiting_pickup',
+                        'rental_status' => 'menunggu diambil',
                     ]);
                     $counter += 1;
                 }
@@ -102,7 +102,7 @@ class AdminBookingController extends Controller
     public function updateStatus(Request $request, Booking $booking)
     {
         $data = $request->validate([
-            'rental_status' => ['required', 'in:waiting_pickup,active,completed,canceled'],
+            'rental_status' => ['required', 'in:menunggu diambil,aktif,dikembalikan,dibatalkan'],
         ]);
 
         $rentals = Rental::where('rental_code', 'like', $booking->order_code . '-%')->get();
@@ -114,11 +114,11 @@ class AdminBookingController extends Controller
         foreach ($rentals as $rental) {
             $updates = ['rental_status' => $data['rental_status']];
 
-            if ($data['rental_status'] === 'active' && !$rental->rental_start_time) {
+            if ($data['rental_status'] === 'aktif' && !$rental->rental_start_time) {
                 $updates['rental_start_time'] = now();
             }
 
-            if ($data['rental_status'] === 'completed') {
+            if ($data['rental_status'] === 'dikembalikan') {
                 $updates['rental_end_time'] = now();
             }
 

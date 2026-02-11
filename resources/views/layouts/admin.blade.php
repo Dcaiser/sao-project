@@ -31,7 +31,7 @@
                         <span class="text-sm font-medium">Manajemen Kategori</span>
                     </a>
                     <a href="/admin/roles" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/roles') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                        <span class="text-sm font-medium">Manajemen role</span>
+                        <span class="text-sm font-medium">Manajemen Akun</span>
                     </a>
                 @endif
 
@@ -45,14 +45,7 @@
                         <h1 class="text-xl font-semibold text-slate-900">@yield('header', 'Dashboard')</h1>
                         <p class="text-sm text-slate-500">Pantau aktivitas rental dan status booking hari ini.</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button class="rounded-xl border border-[#0F2854]/20 px-4 py-2 text-sm font-medium text-[#0F2854] hover:bg-[#0F2854]/5 transition">
-                            Export
-                        </button>
-                        <button class="rounded-xl bg-[#0F2854] px-4 py-2 text-sm font-medium text-white hover:bg-[#0B1F44] transition">
-                            Tambah Booking
-                        </button>
-                    </div>
+                    
                 </div>
             </header>
 

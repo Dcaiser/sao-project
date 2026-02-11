@@ -73,7 +73,7 @@ class bookingcontroller extends Controller
 
         DB::transaction(function () use ($request, $data, $items, $orderCode) {
             $booking = Booking::create([
-                'user_id' => $user->id,
+                'user_id' => $request->user()->id,
                 'order_code' => $orderCode,
                 'date_start' => $data['date_start'],
                 'date_end' => $data['date_end'],
@@ -91,6 +91,23 @@ class bookingcontroller extends Controller
         });
 
         return redirect()->route('booking.status')->with('status', 'Pengajuan berhasil dikirim.');
+    }
+
+    public function cancel(Request $request, Booking $booking)
+    {
+        $user = $request->user();
+
+        if (!$user || $booking->user_id !== $user->id) {
+            return back()->withErrors(['error' => 'Anda tidak bisa membatalkan booking ini.']);
+        }
+
+        if ($booking->booking_status !== 'pending') {
+            return back()->withErrors(['error' => 'Hanya booking pending yang bisa dibatalkan.']);
+        }
+
+        $booking->update(['booking_status' => 'cancelled']);
+
+        return redirect()->route('booking.status')->with('status', 'Booking berhasil dibatalkan.');
     }
 
     public function status(Request $request)
@@ -120,6 +137,16 @@ class bookingcontroller extends Controller
 
         $bookingStatuses = [];
         foreach ($orderCodes as $code) {
+            $booking = $bookings->firstWhere('order_code', $code);
+
+            if ($booking->booking_status === 'cancelled') {
+                $bookingStatuses[$code] = [
+                    'status' => 'cancelled',
+                    'hasRentals' => false,
+                ];
+                continue;
+            }
+
             $group = $rentalsByBooking->get($code, collect());
             if ($group->isEmpty()) {
                 $bookingStatuses[$code] = [

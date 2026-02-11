@@ -3,7 +3,8 @@
 
 @section('content')
 <!--hero section-->
-    <section class="relative overflow-hidden bg-red-900">
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-center bg-no-repeat bg-cover" style="background-image: url('{{ asset('storage/products/tenda.jpg') }}'); filter: blur(3px);"></div>
         <div class="absolute rounded-full -top-20 -left-20 h-72 w-72 bg-white/10 blur-3xl"></div>
         <div class="absolute -bottom-24 right-[-5rem] h-80 w-80 rounded-full bg-white/10 blur-3xl"></div>
         <div class="relative px-6 py-16 sm:py-20 lg:px-12">
