@@ -23,12 +23,17 @@
                 <a href="/admin/booking-status" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/booking-status') ? 'bg-white/15' : 'hover:bg-white/10' }}">
                     <span class="text-sm font-medium">Booking Status</span>
                 </a>
-                <a href="/admin/products" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/products') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <span class="text-sm font-medium">Manajemen Produk</span>
-                </a>
-                <a href="/admin/roles" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/roles') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <span class="text-sm font-medium">Manajemen role</span>
-                </a>
+                @if (auth()->check() && auth()->user()->role === 'admin')
+                    <a href="/admin/products" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/products') ? 'bg-white/15' : 'hover:bg-white/10' }}">
+                        <span class="text-sm font-medium">Manajemen Produk</span>
+                    </a>
+                    <a href="/admin/categories" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/categories') ? 'bg-white/15' : 'hover:bg-white/10' }}">
+                        <span class="text-sm font-medium">Manajemen Kategori</span>
+                    </a>
+                    <a href="/admin/roles" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/roles') ? 'bg-white/15' : 'hover:bg-white/10' }}">
+                        <span class="text-sm font-medium">Manajemen role</span>
+                    </a>
+                @endif
 
             </nav>
         </aside>

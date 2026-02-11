@@ -142,7 +142,9 @@
                     <dl>
                         <div>
                             <dt class="sr-only">category</dt>
-                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">{{ $produk->category->name }}</dd>
+                            <dd class="inline-flex rounded-full bg-[#0F2854]/10 px-3 py-1 text-xs font-semibold text-[#0F2854]">
+                                {{ $produk->category?->name ?? '-' }}
+                            </dd>
                         </div>
                         <div>
                             <dt class="sr-only">name</dt>

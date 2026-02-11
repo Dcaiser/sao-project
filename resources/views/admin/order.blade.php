@@ -23,74 +23,62 @@
 			</div>
 		</div>
 
-		<div class="grid gap-4">
-			<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-					<div>
-						<p class="text-sm text-slate-500">Kode Booking</p>
-						<h3 class="text-lg font-semibold text-slate-900">BK-2026-021</h3>
-						<p class="text-sm text-slate-500">Raka Mahendra • 08xx-1234-8899</p>
-					</div>
-					<span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">Menunggu</span>
-				</div>
-				<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-					<div>
-						<p class="text-xs text-slate-500">Periode</p>
-						<p class="text-sm font-medium text-slate-900">10 Feb - 13 Feb</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">Item</p>
-						<p class="text-sm font-medium text-slate-900">Tenda 2P, Carrier, Kompor</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">Total</p>
-						<p class="text-sm font-medium text-slate-900">Rp 325.000</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">DP Minimal</p>
-						<p class="text-sm font-medium text-slate-900">Rp 211.250</p>
-					</div>
-				</div>
-				<div class="mt-5 flex flex-wrap gap-3">
-					<button class="rounded-xl border border-[#0F2854]/20 px-4 py-2 text-sm font-semibold text-[#0F2854] hover:bg-[#0F2854]/5 transition">Detail</button>
-					<button class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 transition">Approve</button>
-					<button class="rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 transition">Reject</button>
-				</div>
+		@if (session('status'))
+			<div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+				{{ session('status') }}
 			</div>
+		@endif
 
-			<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-					<div>
-						<p class="text-sm text-slate-500">Kode Booking</p>
-						<h3 class="text-lg font-semibold text-slate-900">BK-2026-022</h3>
-						<p class="text-sm text-slate-500">Alya Pramesti • 08xx-9876-1122</p>
+		<div class="grid gap-4">
+			@forelse ($bookings as $booking)
+				@php
+					$itemSummary = $booking->items->map(function ($item) {
+						$name = $item->product?->name ?? 'Item';
+						return $name . ' (' . $item->quantity . 'x)';
+					})->implode(', ');
+				@endphp
+				<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+					<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+						<div>
+							<p class="text-sm text-slate-500">Kode Booking</p>
+							<h3 class="text-lg font-semibold text-slate-900">{{ $booking->order_code }}</h3>
+							<p class="text-sm text-slate-500">
+								{{ $booking->user?->name ?? '-' }}
+								@if ($booking->user?->phone)
+									• {{ $booking->user->phone }}
+								@endif
+							</p>
+						</div>
+						<span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">Menunggu</span>
 					</div>
-					<span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Perlu Review</span>
+					<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+						<div>
+							<p class="text-xs text-slate-500">Periode</p>
+							<p class="text-sm font-medium text-slate-900">{{ $booking->date_start }} - {{ $booking->date_end }}</p>
+						</div>
+						<div>
+							<p class="text-xs text-slate-500">Item</p>
+							<p class="text-sm font-medium text-slate-900">{{ $itemSummary ?: '-' }}</p>
+						</div>
+					</div>
+					<div class="mt-5 flex flex-wrap gap-3">
+						<form method="POST" action="{{ route('admin.inbox.approve', $booking) }}">
+							@csrf
+							@method('PATCH')
+							<button type="submit" class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 transition">Approve</button>
+						</form>
+						<form method="POST" action="{{ route('admin.inbox.reject', $booking) }}">
+							@csrf
+							@method('PATCH')
+							<button type="submit" class="rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 transition">Reject</button>
+						</form>
+					</div>
 				</div>
-				<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-					<div>
-						<p class="text-xs text-slate-500">Periode</p>
-						<p class="text-sm font-medium text-slate-900">12 Feb - 15 Feb</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">Item</p>
-						<p class="text-sm font-medium text-slate-900">Tenda 4P, Matras, Lampu</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">Total</p>
-						<p class="text-sm font-medium text-slate-900">Rp 420.000</p>
-					</div>
-					<div>
-						<p class="text-xs text-slate-500">DP Minimal</p>
-						<p class="text-sm font-medium text-slate-900">Rp 273.000</p>
-					</div>
+			@empty
+				<div class="rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
+					Belum ada booking menunggu approval.
 				</div>
-				<div class="mt-5 flex flex-wrap gap-3">
-					<button class="rounded-xl border border-[#0F2854]/20 px-4 py-2 text-sm font-semibold text-[#0F2854] hover:bg-[#0F2854]/5 transition">Detail</button>
-					<button class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 transition">Approve</button>
-					<button class="rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 transition">Reject</button>
-				</div>
-			</div>
+			@endforelse
 		</div>
 	</div>
 @endsection
