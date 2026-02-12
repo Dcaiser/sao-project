@@ -123,4 +123,57 @@
 		</div>
 	</div>
 
+	<div class="mt-6 space-y-6">
+		<div class="flex items-center justify-between">
+			<h2 class="text-lg font-semibold text-slate-900">Data Alat per Kategori</h2>
+			<span class="text-sm text-slate-500">Dikelompokkan berdasarkan nama ekskul</span>
+		</div>
+
+		@forelse ($categoriesWithProducts as $category)
+			<div class="p-6 bg-white border shadow-sm rounded-2xl border-slate-200">
+				<div class="flex items-center justify-between">
+					<h3 class="text-base font-semibold text-slate-900">{{ $category->name }}</h3>
+					<span class="text-xs text-slate-500">{{ $category->products->count() }} item</span>
+				</div>
+
+				@if ($category->products->isEmpty())
+					<p class="mt-4 text-sm text-slate-500">Belum ada alat pada kategori ini.</p>
+				@else
+					<div class="mt-4 overflow-x-auto">
+						<table class="w-full text-sm text-left">
+							<thead class="text-xs uppercase text-slate-500">
+								<tr>
+									<th class="py-3">Nama Alat</th>
+									<th class="py-3">Stok</th>
+									<th class="py-3">Catatan</th>
+									<th class="py-3">Gambar</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-200">
+								@foreach ($category->products as $product)
+									<tr>
+										<td class="py-3 font-medium text-slate-900">{{ $product->name }}</td>
+										<td class="py-3 text-slate-600">{{ $product->stock }}</td>
+										<td class="py-3 text-slate-600">{{ $product->notes ?: '-' }}</td>
+										<td class="py-3">
+											@if ($product->image)
+												<span class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">Ada</span>
+											@else
+												<span class="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-500">Tidak</span>
+											@endif
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
+				@endif
+			</div>
+		@empty
+			<div class="p-6 text-sm text-center bg-white border border-dashed rounded-2xl border-slate-200 text-slate-500">
+				Belum ada kategori.
+			</div>
+		@endforelse
+	</div>
+
 @endsection

@@ -14,6 +14,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <!--navbar-->
     <div class="fixed top-0 flex flex-col items-center justify-center w-full z-20  bg-[#0F2854] text-white">
         <div class="mb-4 text-4xl p-4 font-bold h-[20%] uppercase flex justify-between w-full">
             <button class="">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Bookingitem;
 use App\Models\Rental;
 use App\Models\User;
 use App\Models\Product;
@@ -35,6 +36,15 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
+        $approvedItemsByCategory = Bookingitem::whereHas('booking', function ($query) {
+            $query->where('booking_status', 'approved');
+        })
+            ->with(['product.category', 'booking'])
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->product?->category?->name ?? 'Tanpa Kategori';
+            });
+
         return view('admin.dashboard', compact(
             'bookingToday',
             'bookingTotal',
@@ -45,7 +55,8 @@ class AdminController extends Controller
             'totalUsers',
             'totalProducts',
             'productsOutOfStock',
-            'recentBookings'
+            'recentBookings',
+            'approvedItemsByCategory'
         ));
     }
 

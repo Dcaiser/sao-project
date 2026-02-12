@@ -76,8 +76,51 @@
 							<span class="text-xs font-semibold text-{{ $statusColor }}-600">{{ $statusText }}</span>
 						</div>
 					@empty
-						<div class="text-center py-4 text-slate-500 text-sm">
+						<div class="py-4 text-sm text-center text-slate-500">
 							Belum ada booking
+						</div>
+					@endforelse
+				</div>
+			</div>
+
+			<div class="p-6 bg-white border shadow-sm rounded-2xl border-slate-200">
+				<div class="flex items-center justify-between">
+					<h2 class="text-lg font-semibold text-slate-900">Alat Dipinjam per Ekskul</h2>
+					<span class="text-xs text-slate-500">Berdasarkan booking approved</span>
+				</div>
+				<div class="mt-4 space-y-4">
+					@forelse ($approvedItemsByCategory as $categoryName => $items)
+						<div class="border rounded-xl border-slate-200">
+							<div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+								<h3 class="text-sm font-semibold text-slate-900">{{ $categoryName }}</h3>
+								<span class="text-xs text-slate-500">{{ $items->count() }} alat</span>
+							</div>
+							<div class="overflow-x-auto">
+								<table class="w-full text-sm text-left">
+									<thead class="text-xs uppercase text-slate-500">
+										<tr>
+											<th class="px-4 py-3">Nama Alat</th>
+											<th class="px-4 py-3">Qty</th>
+											<th class="px-4 py-3">Tanggal Booking</th>
+										</tr>
+									</thead>
+									<tbody class="divide-y divide-slate-200">
+										@foreach ($items as $item)
+											<tr>
+												<td class="px-4 py-3 font-medium text-slate-900">{{ $item->product?->name ?? '-' }}</td>
+												<td class="px-4 py-3 text-slate-600">{{ $item->quantity }}</td>
+												<td class="px-4 py-3 text-slate-600">
+													{{ $item->booking?->date_start ?? '-' }} - {{ $item->booking?->date_end ?? '-' }}
+												</td>
+											</tr>
+										@endforeach
+									</tbody>
+								</table>
+							</div>
+						</div>
+					@empty
+						<div class="p-4 text-sm text-center border border-dashed rounded-xl border-slate-200 text-slate-500">
+							Belum ada booking yang disetujui.
 						</div>
 					@endforelse
 				</div>

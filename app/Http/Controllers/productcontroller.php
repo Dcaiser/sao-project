@@ -14,7 +14,11 @@ class ProductController extends Controller
         $products = Product::with('category')->latest()->get();
         $categories = Category::orderBy('name')->get();
 
-        return view('admin.product', compact('products', 'categories'));
+        $categoriesWithProducts = Category::with(['products' => function ($query) {
+            $query->orderBy('name');
+        }])->orderBy('name')->get();
+
+        return view('admin.product', compact('products', 'categories', 'categoriesWithProducts'));
     }
 
     public function store(Request $request)
