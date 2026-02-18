@@ -25,7 +25,7 @@
                     </svg>
 
             </button>
-            <h1 class="">sewa alat ekstrakurikuler</h1>
+            <h1 class="">peminjaman alat ekstrakurikuler</h1>
             <div class="text-white">
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
                     @auth

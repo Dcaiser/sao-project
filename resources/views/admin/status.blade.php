@@ -25,8 +25,14 @@
 		</div>
 
 		@if (session('status'))
-			<div class="p-4 text-sm border rounded-2xl border-emerald-200 bg-emerald-50 text-emerald-700">
+			<div class="p-4 text-sm border rounded-2xl border-emerald-200 bg-emerald-50 text-emerald-700"
+             x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 3000)"
+                x-show="show"
+                x-transition
+                class="p-4 text-sm border rounded-2xl border-emerald-200 bg-emerald-50 text-emerald-700">
 				{{ session('status') }}
+
 			</div>
 		@endif
 
