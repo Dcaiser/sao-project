@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Booking;
 use App\Models\Bookingitem;
 use App\Models\Rental;
 
@@ -46,7 +45,7 @@ class bookingcontroller extends Controller
         $data = $request->validate([
             'date_start' => ['required', 'date'],
             'date_end' => ['required', 'date', 'after_or_equal:date_start'],
-            'notes' => ['nullable', 'string'],
+            'reason' => ['string','required'],
             'items' => ['required', 'string'],
         ]);
 
@@ -72,28 +71,31 @@ class bookingcontroller extends Controller
         $orderCode = 'BK-' . now()->format('Ymd') . '-' . Str::upper(Str::random(6));
 
         DB::transaction(function () use ($request, $data, $items, $orderCode) {
-            $booking = Booking::create([
+            $booking = Rental::create([
                 'user_id' => $request->user()->id,
-                'order_code' => $orderCode,
-                'date_start' => $data['date_start'],
-                'date_end' => $data['date_end'],
-                'notes' => $data['notes'] ?? null,
-                'booking_status' => 'pending',
+                'rental_code' => $orderCode,
+                'product_id' => $items[0]['product_id'],
+                'rental_start_date' => $data['date_start'],
+                'rental_end_date' => $data['date_end'],
+                'reason' => $data['reason'],
+                'rental_status' => 'pending',
             ]);
 
             foreach ($items as $item) {
                 Bookingitem::create([
-                    'booking_id' => $booking->id,
+                    'rental_id' => $booking->id,
                     'product_id' => $item['product_id'],
                     'quantity' => (int) $item['quantity'],
                 ]);
             }
-        });
+
+
+            });
 
         return redirect()->route('booking.status')->with('status', 'Pengajuan berhasil dikirim.');
     }
 
-    public function cancel(Request $request, Booking $booking)
+    public function cancel(Request $request, Rental $booking)
     {
         $user = $request->user();
 
@@ -101,11 +103,11 @@ class bookingcontroller extends Controller
             return back()->withErrors(['error' => 'Anda tidak bisa membatalkan booking ini.']);
         }
 
-        if ($booking->booking_status !== 'pending') {
+        if ($booking->rental_status !== 'pending') {
             return back()->withErrors(['error' => 'Hanya booking pending yang bisa dibatalkan.']);
         }
 
-        $booking->update(['booking_status' => 'cancelled']);
+        $booking->update(['rental_status' => 'cancelled']);
 
         return redirect()->route('booking.status')->with('status', 'Booking berhasil dibatalkan.');
     }
@@ -117,50 +119,15 @@ class bookingcontroller extends Controller
             return redirect()->route('login');
         }
 
-        $bookings = Booking::with(['items.product'])
+        $bookings = Rental::with(['items.product'])
             ->where('user_id', $user->id)
             ->latest()
             ->get();
 
-        $orderCodes = $bookings->pluck('order_code')->filter()->values();
-        $rentals = Rental::where(function ($query) use ($orderCodes) {
-            foreach ($orderCodes as $code) {
-                $query->orWhere('rental_code', 'like', $code . '-%');
-            }
-        })->get();
-
-        $rentalsByBooking = $rentals->groupBy(function ($rental) {
-            $parts = explode('-', $rental->rental_code);
-            array_pop($parts);
-            return implode('-', $parts);
-        });
-
         $bookingStatuses = [];
-        foreach ($orderCodes as $code) {
-            $booking = $bookings->firstWhere('order_code', $code);
-
-            if ($booking->booking_status === 'cancelled') {
-                $bookingStatuses[$code] = [
-                    'status' => 'cancelled',
-                    'hasRentals' => false,
-                ];
-                continue;
-            }
-
-            $group = $rentalsByBooking->get($code, collect());
-            if ($group->isEmpty()) {
-                $bookingStatuses[$code] = [
-                    'status' => 'pending',
-                    'hasRentals' => false,
-                ];
-                continue;
-            }
-
-            $unique = $group->pluck('rental_status')->unique();
-            $status = $unique->count() === 1 ? $unique->first() : 'mixed';
-
-            $bookingStatuses[$code] = [
-                'status' => $status,
+        foreach ($bookings as $booking) {
+            $bookingStatuses[$booking->rental_code] = [
+                'status' => $booking->rental_status ?? 'pending',
                 'hasRentals' => true,
             ];
         }

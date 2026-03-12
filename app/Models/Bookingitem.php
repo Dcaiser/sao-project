@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Bookingitem extends Model
 {
     protected $fillable = [
-        'booking_id',
+        'rental_id',
         'product_id',
         'quantity',
     ];
 
-    public function booking()
+    public function rental()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->belongsTo(Rental::class);
     }
 
     public function product()

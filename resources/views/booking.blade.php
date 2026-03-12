@@ -49,8 +49,8 @@
 
 						<div class="mt-4">
 							<label class="text-sm font-medium text-slate-700" for="loan-reason">Alasan</label>
-							<textarea id="loan-reason" name="notes" rows="4" placeholder="Contoh: untuk persiapan lomba." class="w-full mt-2 rounded-xl border-slate-200">{{ old('notes') }}</textarea>
-							@error('notes')
+							<textarea id="loan-reason" name="reason" rows="4" placeholder="Contoh: untuk persiapan lomba." class="w-full mt-2 rounded-xl border-slate-200" required>{{ old('reason') }}</textarea>
+							@error('reason')
 								<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
 							@enderror
 						</div>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use App\Models\Bookingitem;
 use App\Models\Rental;
 use App\Models\User;
@@ -19,10 +18,10 @@ class AdminController extends Controller
     {
         $today = Carbon::today();
 
-        $bookingToday = Booking::whereDate('created_at', $today)->count();
-        $bookingTotal = Booking::count();
-        $bookingPending = Booking::where('booking_status', 'pending')->count();
-        $bookingApproved = Booking::where('booking_status', 'approved')->count();
+        $bookingToday = Rental::whereDate('created_at', $today)->count();
+        $bookingTotal = Rental::count();
+        $bookingPending = Rental::where('rental_status', 'pending')->count();
+        $bookingApproved = Rental::where('rental_status', 'approved')->count();
 
         $rentalToday = Rental::whereDate('created_at', $today)->count();
         $rentalActive = Rental::where('rental_status', 'renting')->count();
@@ -31,15 +30,15 @@ class AdminController extends Controller
         $totalProducts = Product::count();
         $productsOutOfStock = Product::where('stock', '<=', 0)->count();
 
-        $recentBookings = Booking::with('user', 'items.product')
+        $recentBookings = Rental::with('user', 'items.product')
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
-        $approvedItemsByCategory = Bookingitem::whereHas('booking', function ($query) {
-            $query->where('booking_status', 'approved');
+        $approvedItemsByCategory = Bookingitem::whereHas('rental', function ($query) {
+            $query->where('rental_status', 'approved');
         })
-            ->with(['product.category', 'booking'])
+            ->with(['product.category', 'rental'])
             ->get()
             ->groupBy(function ($item) {
                 return $item->product?->category?->name ?? 'Tanpa Kategori';
