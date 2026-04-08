@@ -79,7 +79,7 @@ class AdminBookingController extends Controller
                 $updates['rental_start_time'] = now();
             }
 
-            if ($data['rental_status'] === 'dikembalikan') {
+            if ($data['rental_status'] === 'dikembalikan'|| $data['rental_status'] === 'terlambat dikembalikan') {
                 $updates['rental_end_time'] = now();
             }
 
