@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-
+use App\Models\Activity;
 class akuncontroller extends Controller
 {
     /**
@@ -49,6 +49,12 @@ class akuncontroller extends Controller
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
         ]);
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menambahkan akun',
+            'object' => $validated['name'],
+        ]);
 
         return back()->with('status', 'Akun baru berhasil dibuat.');
     }
@@ -67,6 +73,7 @@ class akuncontroller extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
+
 
         return view('admin.account-edit', compact('user'));
     }
@@ -127,6 +134,12 @@ class akuncontroller extends Controller
         }
 
         $user->update($updateData);
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Memperbarui akun',
+            'object' => $validated['name'],
+        ]);
 
         return redirect()->route('admin.roles.index')->with('status', 'Akun berhasil diperbarui.');
     }
@@ -145,6 +158,14 @@ class akuncontroller extends Controller
         }
 
         $user->delete();
+
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menghapus akun',
+            'object' => $user->name,
+        ]);
+
 
         return back()->with('status', 'Akun berhasil dihapus.');
     }

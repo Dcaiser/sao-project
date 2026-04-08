@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Activity;
 
 class ProductController extends Controller
 {
@@ -36,6 +37,12 @@ class ProductController extends Controller
         }
 
         Product::create($data);
+        Activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menambahkan produk',
+            'object' => $data['name'],
+        ]);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil ditambahkan.');
     }
@@ -44,6 +51,7 @@ class ProductController extends Controller
     {
         $product->load('category');
         $categories = Category::orderBy('name')->get();
+
 
         return view('admin.product-edit', compact('product', 'categories'));
     }
@@ -66,6 +74,12 @@ class ProductController extends Controller
         }
 
         $product->update($data);
+        Activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Memperbarui produk',
+            'object' => $data['name'],
+        ]);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil diperbarui.');
     }
@@ -77,6 +91,13 @@ class ProductController extends Controller
         }
 
         $product->delete();
+
+        Activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menghapus produk',
+            'object' => $product->name,
+        ]);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil dihapus.');
     }

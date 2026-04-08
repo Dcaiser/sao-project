@@ -36,6 +36,10 @@
                     <a href="/admin/roles" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/roles') ? 'bg-white/15' : 'hover:bg-white/10' }}">
                         <span class="text-sm font-medium">Manajemen Akun</span>
                     </a>
+                    <a href="{{ route('activities') }}" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/activities') ? 'bg-white/15' : 'hover:bg-white/10' }}">
+                        <span class="text-sm font-medium">aktivitas</span>
+                    </a>
+
                 @endif
 
             </nav>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Activity;
 
 class CategoryController extends Controller
 {
@@ -21,6 +22,12 @@ class CategoryController extends Controller
         ]);
 
         Category::create($data);
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menambahkan kategori',
+            'object' => $data['name'],
+        ]);
 
         return redirect()->route('admin.categories.index')->with('status', 'Kategori berhasil ditambahkan.');
     }
@@ -37,6 +44,12 @@ class CategoryController extends Controller
         ]);
 
         $category->update($data);
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Memperbarui kategori',
+            'object' => $data['name'],
+        ]);
 
         return redirect()->route('admin.categories.index')->with('status', 'Kategori berhasil diperbarui.');
     }
@@ -44,7 +57,12 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-
+        activity::create([
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+            'activity' => 'Menghapus kategori',
+            'object' => $category->name,
+        ]);
         return redirect()->route('admin.categories.index')->with('status', 'Kategori berhasil dihapus.');
     }
 }
