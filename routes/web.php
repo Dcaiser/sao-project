@@ -8,13 +8,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\bookingcontroller;
 use App\Http\Controllers\AdminBookingController;
+use App\Http\Controllers\reportcontroller;
 use App\Http\Controllers\akuncontroller;
 //
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/home',[HomeController::class, 'index'])->name('home');
+Route::get('/',[HomeController::class, 'index'])->name('home');
 Route::get('/booking', [bookingcontroller::class, 'index'])->name('booking');
 Route::post('/booking', [bookingcontroller::class, 'store'])->middleware('auth')->name('booking.store');
 Route::get('/booking-status', [bookingcontroller::class, 'status'])->middleware('auth')->name('booking.status');
@@ -28,6 +29,7 @@ Route::middleware(['auth','role:admin,staff'])->group(function () {
     Route::patch('/admin/inbox/{booking}/reject', [AdminBookingController::class, 'reject'])->name('admin.inbox.reject');
     Route::get('/admin/booking-status', [AdminBookingController::class, 'status'])->name('admin.booking.status');
     Route::patch('/admin/booking-status/{booking}', [AdminBookingController::class, 'updateStatus'])->name('admin.booking.status.update');
+    Route::get('/admin/report', [reportcontroller::class, 'index'])->name('admin.report');
 });
 
 Route::middleware(['auth','role:admin'])->group(function () {

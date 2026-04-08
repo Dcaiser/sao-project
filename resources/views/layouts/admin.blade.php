@@ -23,6 +23,9 @@
                 <a href="/admin/booking-status" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/booking-status') ? 'bg-white/15' : 'hover:bg-white/10' }}">
                     <span class="text-sm font-medium">Booking Status</span>
                 </a>
+                <a href="/admin/report" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/report') ? 'bg-white/15' : 'hover:bg-white/10' }}">
+                    <span class="text-sm font-medium">Laporan</span>
+                </a>
                 @if (auth()->check() && auth()->user()->role === 'admin')
                     <a href="/admin/products" class="flex items-center gap-3 px-4 py-3 transition rounded-xl {{ request()->is('admin/products') ? 'bg-white/15' : 'hover:bg-white/10' }}">
                         <span class="text-sm font-medium">Manajemen Produk</span>
@@ -45,7 +48,7 @@
                         <h1 class="text-xl font-semibold text-slate-900">@yield('header', 'Dashboard')</h1>
                         <p class="text-sm text-slate-500">Pantau aktivitas rental dan status booking hari ini.</p>
                     </div>
-                    
+
                 </div>
             </header>
 

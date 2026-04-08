@@ -47,6 +47,7 @@
 						'approved' => 'bg-sky-100 text-sky-700',
 						'menunggu diambil' => 'bg-cyan-100 text-cyan-700',
 						'aktif' => 'bg-emerald-100 text-emerald-700',
+						'terlambat dikembalikan' => 'bg-rose-100 text-rose-700',
 						'dikembalikan' => 'bg-slate-100 text-slate-600',
 						'dibatalkan' => 'bg-rose-100 text-rose-700',
 						'rejected' => 'bg-rose-100 text-rose-700',
@@ -89,16 +90,24 @@
 					<form class="flex flex-wrap items-center gap-3 mt-5" method="POST" action="{{ route('admin.booking.status.update', $booking) }}">
 						@csrf
 						@method('PATCH')
-						<select name="rental_status" class="px-3 h-11 rounded-xl border-slate-200" @disabled(!$statusMeta['hasRentals'])>
-							<option value="approved" @selected($statusMeta['status'] === 'approved')>approved</option>
+						<select name="rental_status" class="px-3 h-11 rounded-xl border-slate-200" @disabled(!$statusMeta['hasRentals'] || $isOverdue)>
+							<option value="approved" @selected($statusMeta['status'] === 'approved') disabled>approved</option>
 							<option value="menunggu diambil" @selected($statusMeta['status'] === 'menunggu diambil')>menunggu diambil</option>
 							<option value="aktif" @selected($statusMeta['status'] === 'aktif')>aktif</option>
+							<option value="terlambat dikembalikan" @selected($statusMeta['status'] === 'terlambat dikembalikan')>terlambat dikembalikan</option>
 							<option value="dikembalikan" @selected($statusMeta['status'] === 'dikembalikan')>dikembalikan</option>
 							<option value="dibatalkan" @selected($statusMeta['status'] === 'dibatalkan')>dibatalkan</option>
 						</select>
+                        @if ($isOverdue)
+                        <input type="hidden" name="rental_status" value="terlambat dikembalikan">
+                        <button type="submit" class="px-5 text-sm font-semibold text-white transition h-11 rounded-xl bg-rose-500 hover:bg-rose-600" @disabled(!$statusMeta['hasRentals'])>
+                            terlambat dikembalikan
+                        </button>
+                        @else
 						<button type="submit" class="h-11 rounded-xl bg-[#0F2854] px-5 text-sm font-semibold text-white hover:bg-[#0B1F44] transition" @disabled(!$statusMeta['hasRentals'])>
 							Update Status
 						</button>
+                        @endif
 					</form>
 				</div>
 			@empty

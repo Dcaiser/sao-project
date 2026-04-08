@@ -20,14 +20,6 @@
                     <p class="mt-5 text-lg text-white/85">
                         Mulai dari perlengkapan pramuka, olahraga, musik, hingga multimedia. Booking mudah, kondisi terawat, jadwal transparan.
                     </p>
-                    <div class="flex flex-wrap gap-4 mt-8">
-                        <a href="#" class="rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#0F2854] shadow-lg shadow-black/20 hover:bg-slate-100 transition">
-                            Lihat Katalog
-                        </a>
-                        <a href="#" class="px-6 py-3 text-sm font-semibold text-white transition border rounded-xl border-white/30 hover:bg-white/10">
-                            Cara Peminjaman
-                        </a>
-                    </div>
                     <div class="grid grid-cols-2 gap-6 mt-10 sm:grid-cols-3">
                         <div>
                             <div class="text-2xl font-semibold text-white">4.9/5</div>

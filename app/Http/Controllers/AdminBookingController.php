@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Rental;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AdminBookingController extends Controller
 {
@@ -62,7 +61,7 @@ class AdminBookingController extends Controller
     public function updateStatus(Request $request, Rental $booking)
     {
         $data = $request->validate([
-            'rental_status' => ['required', 'in:approved,menunggu diambil,aktif,dikembalikan,dibatalkan'],
+            'rental_status' => ['required', 'in:approved,menunggu diambil,aktif,dikembalikan,dibatalkan,terlambat dikembalikan'],
         ]);
 
         $rentals = Rental::where('rental_code', $booking->rental_code)

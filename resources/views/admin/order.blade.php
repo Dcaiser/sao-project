@@ -68,7 +68,7 @@
 					<div class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
 						<div>
 							<p class="text-xs text-slate-500">Periode</p>
-							<p class="text-sm font-medium text-slate-900">{{ $booking->date_start }} - {{ $booking->date_end }}</p>
+							<p class="text-sm font-medium text-slate-900">{{ $booking->rental_start_date }} - {{ $booking->rental_end_date }}</p>
 						</div>
 						<div>
 							<p class="text-xs text-slate-500">Item</p>

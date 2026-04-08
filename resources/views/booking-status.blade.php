@@ -33,6 +33,7 @@
 						'mixed' => 'bg-indigo-100 text-indigo-700',
 						default => 'bg-amber-100 text-amber-700',
 					};
+                    $isOverdue = $statusMeta['status'] === 'aktif' && now()->greaterThan($booking->rental_end_date);
 					@endphp
 					<div class="p-6 bg-white border shadow-sm rounded-2xl border-slate-200">
 						<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -40,9 +41,14 @@
 								<p class="text-sm text-slate-500">Kode Booking</p>
 								<h3 class="text-lg font-semibold text-slate-900">{{ $booking->rental_code }}</h3>
 							</div>
-							<span class="rounded-full px-3 py-1 text-xs font-semibold {{ $badgeClass }}">
+                            @if ($isOverdue)
+                                    
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-rose-50 text-rose-600">Melebihi batas</span>
+                            @else
+                            <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $badgeClass }}">
 								{{ str_replace('_', ' ', ucfirst($statusMeta['status'])) }}
 							</span>
+                            @endif
 						</div>
 						<div class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
 							<div>
