@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rentals', function (Blueprint $table) {
+            Schema::table('rentals', function (Blueprint $table) {
+
             $table->enum('rental_status', ['pending', 'approved', 'menunggu diambil', 'aktif', 'menunggu konfirmasi', 'dikembalikan', 'dibatalkan', 'rejected', 'cancelled', 'terlambat dikembalikan'])->default('pending')->change();
         });
+
     }
 
     /**
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rentals', function (Blueprint $table) {
-            $table->enum('rental_status', ['pending', 'approved', 'menunggu diambil', 'aktif', 'dikembalikan', 'dibatalkan', 'rejected', 'cancelled'])->default('pending')->index()->change();
-        });
+        //
     }
 };

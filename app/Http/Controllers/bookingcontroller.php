@@ -112,6 +112,23 @@ class bookingcontroller extends Controller
         return redirect()->route('booking.status')->with('status', 'Booking berhasil dibatalkan.');
     }
 
+    public function returnTool(Request $request, Rental $booking)
+    {
+        $user = $request->user();
+
+        if (!$user || $booking->user_id !== $user->id) {
+            return back()->withErrors(['error' => 'Anda tidak bisa mengubah booking ini.']);
+        }
+
+        if ($booking->rental_status !== 'aktif') {
+            return back()->withErrors(['error' => 'Pengembalian hanya bisa diajukan saat status aktif.']);
+        }
+
+        $booking->update(['rental_status' => 'menunggu konfirmasi']);
+
+        return redirect()->route('booking.status')->with('status', 'Pengembalian sudah diajukan dan menunggu konfirmasi staff.');
+    }
+
     public function status(Request $request)
     {
         $user = $request->user();

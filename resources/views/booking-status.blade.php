@@ -27,6 +27,7 @@
 						'approved' => 'bg-sky-100 text-sky-700',
 						'menunggu diambil' => 'bg-cyan-100 text-cyan-700',
 						'aktif' => 'bg-emerald-100 text-emerald-700',
+						'menunggu konfirmasi' => 'bg-amber-100 text-amber-700',
 						'dikembalikan' => 'bg-slate-100 text-slate-600',
 						'dibatalkan' => 'bg-rose-100 text-rose-700',
 						'rejected' => 'bg-rose-100 text-rose-700',
@@ -42,13 +43,15 @@
 								<h3 class="text-lg font-semibold text-slate-900">{{ $booking->rental_code }}</h3>
 							</div>
                             @if ($isOverdue)
-                                    
+
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-rose-50 text-rose-600">Melebihi batas</span>
                             @else
                             <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $badgeClass }}">
 								{{ str_replace('_', ' ', ucfirst($statusMeta['status'])) }}
 							</span>
                             @endif
+
+
 						</div>
 						<div class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
 							<div>
@@ -59,6 +62,7 @@
 								<p class="text-xs text-slate-500">Item</p>
 								<p class="text-sm font-medium text-slate-900">{{ $itemSummary ?: '-' }}</p>
 							</div>
+
 					</div>
 					@if ($booking->rental_status === 'pending')
 						<div class="mt-4">
@@ -69,6 +73,22 @@
 									Batalkan Booking
 								</button>
 							</form>
+						</div>
+					@endif
+                     @if ($booking->rental_status === 'aktif')
+                                    <div class="mt-4">
+										<form method="POST" action="{{ route('booking.return', $booking) }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan alat?');">
+                                            @csrf
+											@method('PATCH')
+                                            <button type="submit" class="inline-flex px-4 py-2 text-sm font-semibold text-white transition rounded-lg bg-rose-500 hover:bg-rose-600">
+                                                kembalikan Alat
+                                            </button>
+                                        </form>
+                                    </div>
+                    @endif
+					@if ($booking->rental_status === 'menunggu konfirmasi')
+						<div class="mt-4 text-sm font-medium text-amber-700">
+							Pengembalian Anda sedang menunggu konfirmasi staff.
 						</div>
 					@endif
 				</div>

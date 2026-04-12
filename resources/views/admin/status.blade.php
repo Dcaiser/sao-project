@@ -47,6 +47,7 @@
 						'approved' => 'bg-sky-100 text-sky-700',
 						'menunggu diambil' => 'bg-cyan-100 text-cyan-700',
 						'aktif' => 'bg-emerald-100 text-emerald-700',
+						'menunggu konfirmasi' => 'bg-amber-100 text-amber-700',
 						'terlambat dikembalikan' => 'bg-rose-100 text-rose-700',
 						'dikembalikan' => 'bg-slate-100 text-slate-600',
 						'dibatalkan' => 'bg-rose-100 text-rose-700',
@@ -94,20 +95,26 @@
 							<option value="approved" @selected($statusMeta['status'] === 'approved') disabled>approved</option>
 							<option value="menunggu diambil" @selected($statusMeta['status'] === 'menunggu diambil')>menunggu diambil</option>
 							<option value="aktif" @selected($statusMeta['status'] === 'aktif')>aktif</option>
+							<option value="menunggu konfirmasi" @selected($statusMeta['status'] === 'menunggu konfirmasi')>menunggu konfirmasi</option>
 							<option value="terlambat dikembalikan" @selected($statusMeta['status'] === 'terlambat dikembalikan')>terlambat dikembalikan</option>
 							<option value="dikembalikan" @selected($statusMeta['status'] === 'dikembalikan')>dikembalikan</option>
 							<option value="dibatalkan" @selected($statusMeta['status'] === 'dibatalkan')>dibatalkan</option>
 						</select>
-                        @if ($isOverdue)
-                        <input type="hidden" name="rental_status" value="terlambat dikembalikan">
-                        <button type="submit" class="px-5 text-sm font-semibold text-white transition h-11 rounded-xl bg-rose-500 hover:bg-rose-600" @disabled(!$statusMeta['hasRentals'])>
-                            terlambat dikembalikan
-                        </button>
-                        @else
-						<button type="submit" class="h-11 rounded-xl bg-[#0F2854] px-5 text-sm font-semibold text-white hover:bg-[#0B1F44] transition" @disabled(!$statusMeta['hasRentals'])>
-							Update Status
-						</button>
-                        @endif
+						@if ($isOverdue)
+							<input type="hidden" name="rental_status" value="terlambat dikembalikan">
+							<button type="submit" class="px-5 text-sm font-semibold text-white transition h-11 rounded-xl bg-rose-500 hover:bg-rose-600" @disabled(!$statusMeta['hasRentals'])>
+								terlambat dikembalikan
+							</button>
+						@else
+							<button type="submit" class="h-11 rounded-xl bg-[#0F2854] px-5 text-sm font-semibold text-white hover:bg-[#0B1F44] transition" @disabled(!$statusMeta['hasRentals'])>
+								Update Status
+							</button>
+						@endif
+						@if ($statusMeta['status'] === 'menunggu konfirmasi')
+							<button type="submit" name="rental_status" value="dikembalikan" class="px-5 text-sm font-semibold text-white transition h-11 rounded-xl bg-emerald-500 hover:bg-emerald-600" @disabled(!$statusMeta['hasRentals'])>
+								Konfirmasi Dikembalikan
+							</button>
+						@endif
 					</form>
 				</div>
 			@empty

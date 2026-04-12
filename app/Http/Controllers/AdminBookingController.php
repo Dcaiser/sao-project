@@ -61,7 +61,7 @@ class AdminBookingController extends Controller
     public function updateStatus(Request $request, Rental $booking)
     {
         $data = $request->validate([
-            'rental_status' => ['required', 'in:approved,menunggu diambil,aktif,dikembalikan,dibatalkan,terlambat dikembalikan'],
+            'rental_status' => ['required', 'in:approved,menunggu diambil,aktif,menunggu konfirmasi,dikembalikan,dibatalkan,terlambat dikembalikan'],
         ]);
 
         $rentals = Rental::where('rental_code', $booking->rental_code)

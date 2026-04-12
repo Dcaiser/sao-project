@@ -21,6 +21,7 @@ Route::get('/booking', [bookingcontroller::class, 'index'])->name('booking');
 Route::post('/booking', [bookingcontroller::class, 'store'])->middleware('auth')->name('booking.store');
 Route::get('/booking-status', [bookingcontroller::class, 'status'])->middleware('auth')->name('booking.status');
 Route::delete('/booking/{booking}', [bookingcontroller::class, 'cancel'])->middleware('auth')->name('booking.cancel');
+Route::patch('/booking/{booking}/return', [bookingcontroller::class, 'returnTool'])->middleware('auth')->name('booking.return');
 Route::get('/home/status-peminjaman',[bookingcontroller::class, 'status'])->name('status');
 
 Route::middleware(['auth','role:admin,staff'])->group(function () {
