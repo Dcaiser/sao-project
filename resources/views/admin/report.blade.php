@@ -54,9 +54,12 @@
 					<p class="text-sm text-slate-500">Filter data peminjaman alat, lalu cetak hasilnya langsung dari halaman ini.</p>
 				</div>
 				<div class="flex flex-wrap gap-3">
-					<button type="button" onclick="window.print()" class="h-11 rounded-xl bg-[#0F2854] px-5 text-sm font-semibold text-white transition hover:bg-[#0B1F44]">
-						Cetak Laporan
-					</button>
+						<a
+							href="{{ route('admin.report.pdf', ['start_date' => $startDate, 'end_date' => $endDate, 'status' => $status]) }}"
+							class="inline-flex items-center px-5 text-sm font-semibold text-white transition h-11 rounded-xl bg-[#0F2854] hover:bg-[#0B1F44]"
+						>
+							Unduh PDF
+						</a>
 					<a href="{{ route('admin.report') }}" class="inline-flex items-center px-5 text-sm font-semibold transition border h-11 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
 						Reset Filter
 					</a>
@@ -86,7 +89,7 @@
 						Tampilkan Laporan
 					</button>
 				</div>
-               
+
 			</form>
 
 			<div class="grid gap-4 mt-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -102,25 +105,10 @@
 					<p class="text-sm text-slate-500">Total Unit Dipinjam</p>
 					<div class="mt-2 text-3xl font-semibold text-slate-900">{{ $summary['units'] }}</div>
 				</div>
-				<div class="p-5 border rounded-2xl border-slate-200 bg-slate-50">
-					<p class="text-sm text-slate-500">Produk Unik</p>
-					<div class="mt-2 text-3xl font-semibold text-slate-900">{{ $summary['products'] }}</div>
-				</div>
 			</div>
 
 			<div class="grid gap-3 mt-4 sm:grid-cols-2 lg:grid-cols-4 no-print">
-				@foreach ($statusCounts as $key => $count)
-					@php
-						$meta = $statusMap[$key] ?? ['label' => ucfirst(str_replace('_', ' ', $key)), 'class' => 'bg-slate-100 text-slate-700'];
-					@endphp
-					<div class="flex items-center justify-between px-4 py-3 border rounded-xl border-slate-200">
-						<div>
-							<p class="text-xs text-slate-500">{{ $meta['label'] }}</p>
-							<p class="text-lg font-semibold text-slate-900">{{ $count }}</p>
-						</div>
-						<span class="px-3 py-1 text-xs font-semibold rounded-full {{ $meta['class'] }}">Status</span>
-					</div>
-				@endforeach
+
 				@if ($statusCounts->isEmpty())
 					<div class="px-4 py-3 text-sm border border-dashed rounded-xl border-slate-200 text-slate-500 no-print sm:col-span-2 lg:col-span-4">
 						Belum ada data untuk filter yang dipilih.

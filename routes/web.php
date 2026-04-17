@@ -33,6 +33,7 @@ Route::middleware(['auth','role:admin,staff'])->group(function () {
     Route::get('/admin/booking-status', [AdminBookingController::class, 'status'])->name('admin.booking.status');
     Route::patch('/admin/booking-status/{booking}', [AdminBookingController::class, 'updateStatus'])->name('admin.booking.status.update');
     Route::get('/admin/report', [reportcontroller::class, 'index'])->name('admin.report');
+    Route::get('/admin/report/pdf', [reportcontroller::class, 'downloadPdf'])->name('admin.report.pdf');
 });
 
 Route::middleware(['auth','role:admin'])->group(function () {

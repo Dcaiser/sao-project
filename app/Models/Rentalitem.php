@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Bookingitem extends Model
+class Rentalitem extends Model
 {
+    protected $table = 'rentalitems';
+
     protected $fillable = [
         'rental_id',
         'product_id',

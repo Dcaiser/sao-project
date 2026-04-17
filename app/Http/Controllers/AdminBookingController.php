@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rental;
+use App\Models\Activity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminBookingController extends Controller
 {
@@ -31,12 +33,26 @@ class AdminBookingController extends Controller
             $relatedRental->update(['rental_status' => 'approved']);
         }
 
+        Activity::create([
+            'name' => Auth::user()->name,
+            'role' => Auth::user()->role,
+            'activity' => 'approve booking',
+            'object' => $booking->rental_code,
+        ]);
+
         return back()->with('status', 'Booking berhasil di-approve.');
     }
 
     public function reject(Rental $rental)
     {
         $rental->update(['rental_status' => 'rejected']);
+
+        Activity::create([
+            'name' => Auth::user()->name,
+            'role' => Auth::user()->role,
+            'activity' => 'reject booking',
+            'object' => $rental->rental_code,
+        ]);
 
         return back()->with('status', 'Booking berhasil di-reject.');
     }
@@ -85,6 +101,13 @@ class AdminBookingController extends Controller
 
             $rental->update($updates);
         }
+
+        Activity::create([
+            'name' => $request->user()->name,
+            'role' => $request->user()->role,
+            'activity' => 'update status',
+            'object' => $booking->rental_code . ' - ' . $data['rental_status'],
+        ]);
 
         return back()->with('status', 'Status rental berhasil diperbarui.');
     }

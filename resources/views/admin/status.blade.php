@@ -93,10 +93,10 @@
 						@method('PATCH')
 						<select name="rental_status" class="px-3 h-11 rounded-xl border-slate-200" @disabled(!$statusMeta['hasRentals'] || $isOverdue)>
 							<option value="approved" @selected($statusMeta['status'] === 'approved') disabled>approved</option>
-							<option value="menunggu diambil" @selected($statusMeta['status'] === 'menunggu diambil')>menunggu diambil</option>
+							<option value="menunggu diambil" @selected($statusMeta['status'] === 'menunggu diambil') >menunggu diambil</option>
 							<option value="aktif" @selected($statusMeta['status'] === 'aktif')>aktif</option>
-							<option value="menunggu konfirmasi" @selected($statusMeta['status'] === 'menunggu konfirmasi')>menunggu konfirmasi</option>
-							<option value="terlambat dikembalikan" @selected($statusMeta['status'] === 'terlambat dikembalikan')>terlambat dikembalikan</option>
+							<option value="menunggu konfirmasi" @selected($statusMeta['status'] === 'menunggu konfirmasi') disabled>menunggu konfirmasi</option>
+							<option value="terlambat dikembalikan" @selected($statusMeta['status'] === 'terlambat dikembalikan') disabled>terlambat dikembalikan</option>
 							<option value="dikembalikan" @selected($statusMeta['status'] === 'dikembalikan')>dikembalikan</option>
 							<option value="dibatalkan" @selected($statusMeta['status'] === 'dibatalkan')>dibatalkan</option>
 						</select>

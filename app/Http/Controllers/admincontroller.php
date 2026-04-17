@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bookingitem;
+use App\Models\Rentalitem;
 use App\Models\Rental;
 use App\Models\User;
 use App\Models\Product;
@@ -35,7 +35,7 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        $approvedItemsByCategory = Bookingitem::whereHas('rental', function ($query) {
+        $approvedItemsByCategory = Rentalitem::whereHas('rental', function ($query) {
             $query->where('rental_status', 'approved');
         })
             ->with(['product.category', 'rental'])

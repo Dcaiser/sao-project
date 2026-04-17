@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Rentalitem;
 
 class Rental extends Model
 {
@@ -21,7 +22,7 @@ class Rental extends Model
         ];
             public function items()
     {
-        return $this->hasMany(Bookingitem::class);
+        return $this->hasMany(Rentalitem::class);
     }
 
     public function user()

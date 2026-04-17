@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Bookingitem;
+use App\Models\Rentalitem;
 use App\Models\Rental;
 
 class bookingcontroller extends Controller
@@ -82,7 +82,7 @@ class bookingcontroller extends Controller
             ]);
 
             foreach ($items as $item) {
-                Bookingitem::create([
+                Rentalitem::create([
                     'rental_id' => $booking->id,
                     'product_id' => $item['product_id'],
                     'quantity' => (int) $item['quantity'],

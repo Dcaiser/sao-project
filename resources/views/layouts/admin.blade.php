@@ -42,6 +42,13 @@
 
                 @endif
 
+                <form method="POST" action="{{ route('logout') }}" class="pt-2">
+                    @csrf
+                    <button type="submit" onclick="return confirm('yakin ingin logout?')"  class="flex items-center w-full gap-3 px-4 py-3 text-sm font-medium text-left transition rounded-xl hover:bg-white/10">
+                        Logout
+                    </button>
+                </form>
+
             </nav>
         </aside>
 

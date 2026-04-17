@@ -60,13 +60,13 @@
 				<div class="mt-4 space-y-3">
 					@forelse ($recentBookings as $booking)
 						@php
-							$statusColor = match($booking->booking_status) {
+							$statusColor = match($booking->rental_status) {
 								'approved' => 'emerald',
 								'pending' => 'amber',
 								'rejected' => 'rose',
 								default => 'slate'
 							};
-							$statusText = ucfirst($booking->booking_status ?? 'pending');
+							$statusText = ucfirst($booking->rental_status ?? 'pending');
 						@endphp
 						<div class="flex items-center justify-between px-4 py-3 border rounded-xl border-slate-200">
 							<div>

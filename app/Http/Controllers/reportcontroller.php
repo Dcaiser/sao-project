@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bookingitem;
+use App\Models\Rentalitem;
 use App\Models\Report;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -23,59 +24,28 @@ class reportcontroller extends Controller
      */
     public function index(Request $request)
     {
-        $this->syncReports();
+        $reportData = $this->buildReportData($request);
 
-        $data = $request->validate([
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'status' => ['nullable', 'in:all,pending,approved,menunggu diambil,aktif,terlambat dikembalikan,dikembalikan,dibatalkan,rejected,cancelled'],
-        ]);
+        return view('admin.report', $reportData);
+    }
 
-        $startDate = $data['start_date'] ?? Carbon::now()->startOfMonth()->toDateString();
-        $endDate = $data['end_date'] ?? Carbon::now()->toDateString();
-        $status = $data['status'] ?? 'all';
+    /**
+     * Mengunduh laporan sebagai PDF berdasarkan filter aktif.
+     */
+    public function downloadPdf(Request $request)
+    {
+        $reportData = $this->buildReportData($request);
 
-        $reportItems = Report::query()
-            ->whereBetween('rental_start_date', [$startDate, $endDate])
-            ->when($status !== 'all', function ($query) use ($status) {
-                $query->where('rental_status', $status);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $pdf = Pdf::loadView('admin.report-pdf', $reportData)
+            ->setPaper('a4', 'landscape');
 
-        $summary = [
-            'transactions' => $reportItems->pluck('rental_id')->unique()->count(),
-            'items' => $reportItems->count(),
-            'units' => $reportItems->sum('quantity'),
-            'products' => $reportItems->pluck('product_id')->unique()->count(),
-        ];
+        $fileName = sprintf(
+            'laporan-peminjaman-%s-sd-%s.pdf',
+            $reportData['startDate'],
+            $reportData['endDate']
+        );
 
-        $statusCounts = $reportItems
-            ->groupBy(fn ($item) => $item->rental?->rental_status ?? 'unknown')
-            ->map->count();
-
-        $statusOptions = [
-            'all' => 'Semua Status',
-            'approved' => 'Approved',
-            'menunggu diambil' => 'Menunggu Diambil',
-            'aktif' => 'Aktif',
-            'terlambat dikembalikan' => 'Terlambat Dikembalikan',
-            'dikembalikan' => 'Dikembalikan',
-            'dibatalkan' => 'Dibatalkan',
-            'pending' => 'Pending',
-            'rejected' => 'Rejected',
-            'cancelled' => 'Cancelled',
-        ];
-
-        return view('admin.report', compact(
-            'reportItems',
-            'summary',
-            'statusCounts',
-            'statusOptions',
-            'startDate',
-            'endDate',
-            'status'
-        ));
+        return $pdf->download($fileName);
     }
 
     /**
@@ -127,16 +97,16 @@ class reportcontroller extends Controller
     }
 
     /**
-     * Menyinkronkan tabel reports dari data bookingitems beserta relasinya.
+    * Menyinkronkan tabel reports dari data rentalitems beserta relasinya.
      *
      * Mekanisme sinkronisasi:
-     * - Jika tidak ada booking item, seluruh data report dihapus.
+    * - Jika tidak ada rental item, seluruh data report dihapus.
      * - Jika ada data, lakukan upsert berdasarkan bookingitem_id.
-     * - Hapus baris report yang sudah tidak punya pasangan booking item.
+    * - Hapus baris report yang sudah tidak punya pasangan rental item.
      */
     private function syncReports(): void
     {
-        $items = Bookingitem::with(['rental.user', 'product.category'])->get();
+        $items = Rentalitem::with(['rental.user', 'product.category'])->get();
 
         if ($items->isEmpty()) {
             Report::query()->delete();
@@ -183,7 +153,67 @@ class reportcontroller extends Controller
             ]
         );
 
-        $existingBookingItemIds = $items->pluck('id')->all();
-        Report::whereNotIn('bookingitem_id', $existingBookingItemIds)->delete();
+        $existingRentalItemIds = $items->pluck('id')->all();
+        Report::whereNotIn('bookingitem_id', $existingRentalItemIds)->delete();
+    }
+
+    /**
+     * Menyiapkan data laporan agar bisa dipakai view web dan view PDF.
+     */
+    private function buildReportData(Request $request): array
+    {
+        $this->syncReports();
+
+        $data = $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'status' => ['nullable', 'in:all,pending,approved,menunggu diambil,aktif,terlambat dikembalikan,dikembalikan,dibatalkan,rejected,cancelled'],
+        ]);
+
+        $startDate = $data['start_date'] ?? Carbon::now()->startOfMonth()->toDateString();
+        $endDate = $data['end_date'] ?? Carbon::now()->toDateString();
+        $status = $data['status'] ?? 'all';
+
+        $reportItems = Report::query()
+            ->whereBetween('rental_start_date', [$startDate, $endDate])
+            ->when($status !== 'all', function ($query) use ($status) {
+                $query->where('rental_status', $status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $summary = [
+            'transactions' => $reportItems->pluck('rental_id')->unique()->count(),
+            'items' => $reportItems->count(),
+            'units' => $reportItems->sum('quantity'),
+            'products' => $reportItems->pluck('product_id')->unique()->count(),
+        ];
+
+        $statusCounts = $reportItems
+            ->groupBy(fn ($item) => $item->rental_status ?? 'unknown')
+            ->map->count();
+
+        $statusOptions = [
+            'all' => 'Semua Status',
+            'approved' => 'Approved',
+            'menunggu diambil' => 'Menunggu Diambil',
+            'aktif' => 'Aktif',
+            'terlambat dikembalikan' => 'Terlambat Dikembalikan',
+            'dikembalikan' => 'Dikembalikan',
+            'dibatalkan' => 'Dibatalkan',
+            'pending' => 'Pending',
+            'rejected' => 'Rejected',
+            'cancelled' => 'Cancelled',
+        ];
+
+        return compact(
+            'reportItems',
+            'summary',
+            'statusCounts',
+            'statusOptions',
+            'startDate',
+            'endDate',
+            'status'
+        );
     }
 }
